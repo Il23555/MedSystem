@@ -8,3 +8,4 @@ class AnalysesForm(forms.Form):
     nitrogen = forms.FloatField(min_value=0, max_value=20)
     breath = forms.IntegerField(min_value=0, max_value=60)
     age = forms.IntegerField(min_value=10, max_value=120)
+    image = forms.ImageField()
