@@ -1,12 +1,12 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
 
+from NN.model import PneumoniaModel
+from app.settings import MODEL_PATH
 from fuzzylogic.FuzzySystem import FuzzySystem
 from medicine.forms import AnalysesForm
 
-
-def index(request):
-    return render(request, 'medicine/index.html', {})
+nn_model = PneumoniaModel(MODEL_PATH)
+fuzzy_system = FuzzySystem()
 
 
 def analyses(request):
@@ -20,14 +20,12 @@ def analyses(request):
             age = form.cleaned_data['age']
 
             image_field = form.cleaned_data['image']
-            print(image_field.image)
 
-            fuzzy_system = FuzzySystem()
+            nn_predict = nn_model.predict(image_field)
             fuzzy_result = fuzzy_system.query(pressure, conscience, nitrogen, breath, age)
 
-            return render(request, 'medicine/result.html', {'results': fuzzy_result})
+            return render(request, 'medicine/result.html', {'results': [fuzzy_result, nn_predict]})
     else:
         form = AnalysesForm()
 
     return render(request, 'medicine/analyses.html', {'form': form})
-
