@@ -21,7 +21,7 @@ class PneumoniaModel:
         self.model = tf.keras.models.load_model(path_to_model)
 
     def predict(self, img_path):
-        pil_img = Image.open(img_path)
+        pil_img = Image.open(img_path).convert('RGB')
 
         img_array = np.array(pil_img)
         img_array = img_array / 255.
