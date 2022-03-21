@@ -25,26 +25,23 @@
              </header>
         </div>
     </div>
-    <div class="analyses result">
+
+    <div class="contacts">
         <div class="container">
-            <h3 class="analyses-title">Результат</h3>
-            <div class="analyses-form">
-                <form enctype="multipart/form-data" action="" method="post" class="form-analyses decor">
-                    {% csrf_token %}
-                    <div class="form-left-decoration"></div>
-                    <div class="form-right-decoration"></div>
-                    <div class="circle"></div>
-                    <div class="form-inner">
-                        <div class="result-text">
-                            <ul>
-                                {% for result in results %}
-                                  <li><span>{{ result }}</span></li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        <a class="submit" href="/analyses">Пройти заново</a>
-                    </div>
-                </form>
+            <h3 class="analyses-title">О нас</h3>
+            <div class="contacts-wr">
+                <div class="contacts-wr-person">
+                    <img src="{% static 'img/ilyuza.jpg' %}" alt="person">
+                    <p><b>Фахртдинова Илюза Динафовна</b><br>Backend developer</p>
+                </div>
+                <div class="contacts-wr-person">
+                    <img src="{% static 'img/daniel.jpg' %}" alt="person">
+                    <p><b>Соловьёв Даниил Алексеевич</b><br>ML developer</p>
+                </div>
+                <div class="contacts-wr-person">
+                    <img src="{% static 'img/polina.jpg' %}" alt="person">
+                    <p><b>Дорженковская Полина Константиновна</b><br>Frontend developer</p>
+                </div>
             </div>
         </div>
     </div>

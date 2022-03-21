@@ -9,6 +9,14 @@ nn_model = PneumoniaModel(MODEL_PATH)
 fuzzy_system = FuzzySystem()
 
 
+def index(request):
+    return render(request, 'medicine/index.html', {})
+
+
+def contacts(request):
+    return render(request, 'medicine/contacts.html', {})
+
+
 def analyses(request):
     if request.method == 'POST':
         form = AnalysesForm(request.POST, request.FILES)
@@ -25,8 +33,9 @@ def analyses(request):
             fuzzy_result = fuzzy_system.query(pressure, conscience, nitrogen, breath, age)
 
             result_str = concat_results(nn_predict, fuzzy_result)
+            result_list = result_str.split('.')[:-1]
 
-            return render(request, 'medicine/result.html', {'result_str': result_str})
+            return render(request, 'medicine/result.html', {'results': result_list})
     else:
         form = AnalysesForm()
 
@@ -35,14 +44,14 @@ def analyses(request):
 
 def concat_results(nn_predict, fuzzy_predict):
     if nn_predict == 0 and fuzzy_predict > 1.5 or nn_predict == 1 and fuzzy_predict <= 0.5:
-        return 'Ошибка при получении диагностики...'
+        return 'Ошибка при получении диагностики!.'
 
     if nn_predict == 0:
         if fuzzy_predict <= 0.5:
-            return 'Вы здоровы. Поздравляем!'
+            return 'Вы здоровы, поздравляем!.'
         elif fuzzy_predict <= 1.5:
             return 'Система не диагностировала пневмонию. Но у вас может быть легкая степень тяжести заболевания. ' \
-                   'Рекомендуем амбулаторное лечение!'
+                   'Рекомендуем амбулаторное лечение!.'
 
     if nn_predict == 1:
         if fuzzy_predict <= 1.5:
