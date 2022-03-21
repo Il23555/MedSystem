@@ -30,7 +30,7 @@ class PneumoniaModel:
         img_tensor = tf.image.resize(img_tensor, [150, 150])
         img_tensor1 = tf.expand_dims(img_tensor, axis=0)
 
-        pred = self.model(img_tensor1).numpy()[0][0]
+        pred = self.threshold(self.model(img_tensor1).numpy())
 
         return pred
 

@@ -24,8 +24,36 @@ def analyses(request):
             nn_predict = nn_model.predict(image_field)
             fuzzy_result = fuzzy_system.query(pressure, conscience, nitrogen, breath, age)
 
-            return render(request, 'medicine/result.html', {'results': [fuzzy_result, nn_predict]})
+            result_str = concat_results(nn_predict, fuzzy_result)
+
+            return render(request, 'medicine/result.html', {'result_str': result_str})
     else:
         form = AnalysesForm()
 
     return render(request, 'medicine/analyses.html', {'form': form})
+
+
+def concat_results(nn_predict, fuzzy_predict):
+    if nn_predict == 0 and fuzzy_predict > 1.5 or nn_predict == 1 and fuzzy_predict <= 0.5:
+        return 'Ошибка при получении диагностики...'
+
+    if nn_predict == 0:
+        if fuzzy_predict <= 0.5:
+            return 'Вы здоровы. Поздравляем!'
+        elif fuzzy_predict <= 1.5:
+            return 'Система не диагностировала пневмонию. Но у вас может быть легкая степень тяжести заболевания. ' \
+                   'Рекомендуем амбулаторное лечение!'
+
+    if nn_predict == 1:
+        if fuzzy_predict <= 1.5:
+            severity = 'легкую'
+            treatment = 'амбулаторное'
+        elif fuzzy_predict <= 1.5:
+            severity = 'среднетяжелую'
+            treatment = 'стационарное'
+        else:
+            severity = 'тяжелую'
+            treatment = 'стационарное'
+        result = 'Система диагностировала пневмонию. Система определила {} степень тяжести заболевания. ' \
+                 'Система рекомендуют {} лечение.'.format(severity, treatment)
+        return result
